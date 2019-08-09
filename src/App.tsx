@@ -1,26 +1,50 @@
 import React from 'react';
-import logo from './logo.svg';
+import Data from './Data';
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import './App.css';
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export interface IAppState {
+  data: string[];
+  show: boolean;
+}
+
+class App extends React.Component<{}, IAppState> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      data: [],
+      show: false
+    }
+  }
+  componentDidMount() {
+    this.setState({
+      data: ['Mukul', 'Akash', 'Lakshmi'],
+      show: true
+    });
+  }
+  render() {
+    return (
+      <div>
+        {this.state.show && (
+          <PDFDownloadLink
+            document={<Data data={this.state.data} />}
+            fileName="mypdf.pdf"
+            style={{
+              textDecoration: "none",
+              padding: "10px",
+              color: "#4a4a4a",
+              backgroundColor: "#f2f2f2",
+              border: "1px solid #4a4a4a"
+            }}
+          >
+            {({ blob, url, loading, error }) =>
+              loading ? "Loading document..." : "Download Pdf"
+            }
+          </PDFDownloadLink>
+        )}
+      </div>
+    );
+  }
 }
 
 export default App;
